@@ -1,20 +1,26 @@
-import '../../../../core/utils/api_keys.dart';
+import 'package:dartz/dartz.dart';
+import 'package:payment_app/Features/checkout/data/services/stripe_payment_manager.dart';
 import '../models/stripe/payment_intent_input_model.dart';
 import '../models/stripe/payment_intent_model/payment_intent_model.dart';
-import '../services/stripe_service.dart';
 
 class PaymentRepo {
-  final StripeService stripeService;
-  PaymentRepo({required this.stripeService});
+  final StripePaymentManager stripePaymentManager;
+  PaymentRepo({required this.stripePaymentManager});
 
-  Future<PaymentIntentModel> createPaymentIntent({
+  Future<Either<String, PaymentIntentModel>> createPaymentIntent({
     required PaymentIntentInputModel paymentIntentInputModel,
-  }) {
-    return stripeService.createPaymentIntent(
-      authorizationHeader: "Bearer ${ApiKeys.secretKey}",
-      contentType: "application/x-www-form-urlencoded",
-      amount: paymentIntentInputModel.amount,
-      currency: paymentIntentInputModel.currency,
-    );
+  }) async {
+    try {
+      PaymentIntentModel response = await stripePaymentManager
+          .createPaymentIntent(
+            paymentIntentInputModel: paymentIntentInputModel,
+          );
+      // PaymentIntentModel paymentIntentModel = PaymentIntentModel.fromJson(
+      //   response.data,
+      // );
+      return Right(response);
+    } on Exception catch (e) {
+      return Left(e.toString());
+    }
   }
 }

@@ -2,11 +2,11 @@ import 'package:dio/dio.dart';
 import '../models/stripe/payment_intent_model/payment_intent_model.dart';
 import '../../../../core/networking/api_constants.dart';
 import 'package:retrofit/retrofit.dart';
-part 'stripe_service.g.dart';
+part 'stripe_api_service.g.dart';
 
 @RestApi(baseUrl: ApiConstants.stripeBaseUrl)
-abstract class StripeService {
-  factory StripeService(Dio dio) = _StripeService;
+abstract class StripeApiService {
+  factory StripeApiService(Dio dio) = _StripeApiService;
 
   @POST(ApiConstants.createPaymentIntent)
   @FormUrlEncoded()
