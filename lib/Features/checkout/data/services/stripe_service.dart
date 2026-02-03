@@ -1,5 +1,6 @@
 import 'package:payment_app/Features/checkout/data/models/stripe/create_customer_input_model.dart';
 import 'package:payment_app/Features/checkout/data/models/stripe/create_ephemeral_key_model/create_ephemeral_key_model.dart';
+import 'package:payment_app/Features/checkout/data/models/stripe/init_payment_sheet_model.dart';
 import 'package:payment_app/Features/checkout/data/models/stripe/payment_intent_input_model.dart';
 import 'package:payment_app/Features/checkout/data/models/stripe/payment_intent_model/payment_intent_model.dart';
 import 'package:payment_app/Features/checkout/data/models/stripe/stripe_customer_model/stripe_customer_model.dart';
@@ -25,7 +26,7 @@ class StripeService {
       contentType: "application/x-www-form-urlencoded",
       amount: "${paymentIntentInputModel.amount}00",
       currency: paymentIntentInputModel.currency,
-      customerId: paymentIntentInputModel.customerId,
+      customerId: paymentIntentInputModel.customerId ?? "",
     );
   }
 
@@ -52,11 +53,14 @@ class StripeService {
   }
 
   Future<void> initPaymentSheet({
-    required String paymentIntentClientSecret,
+    required InitPaymentSheetModel initPaymentSheetModel,
   }) async {
     Stripe.instance.initPaymentSheet(
       paymentSheetParameters: SetupPaymentSheetParameters(
-        paymentIntentClientSecret: paymentIntentClientSecret,
+        paymentIntentClientSecret:
+            initPaymentSheetModel.paymentIntentClientSecret,
+        customerEphemeralKeySecret: initPaymentSheetModel.ephemeralKeySecret,
+        customerId: initPaymentSheetModel.customerId,
         merchantDisplayName: 'Karim',
       ),
     );
@@ -72,9 +76,18 @@ class StripeService {
     PaymentIntentModel paymentIntentModel = await createPaymentIntent(
       paymentIntentInputModel: paymentIntentInputModel,
     );
-    await initPaymentSheet(
-      paymentIntentClientSecret: paymentIntentModel.clientSecret,
+
+    CreateEphemeralKeyModel createEphemeralKeyModel = await createEphemeralKey(
+      customerId: paymentIntentInputModel.customerId!,
     );
+
+    InitPaymentSheetModel initPaymentSheetModel = InitPaymentSheetModel(
+      paymentIntentClientSecret: paymentIntentModel.clientSecret,
+      ephemeralKeySecret: createEphemeralKeyModel.secret,
+      customerId: paymentIntentInputModel.customerId!,
+    );
+
+    await initPaymentSheet(initPaymentSheetModel: initPaymentSheetModel);
     await displayPaymentSheet();
   }
 }
