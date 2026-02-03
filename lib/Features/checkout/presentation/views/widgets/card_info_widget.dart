@@ -36,16 +36,18 @@ class CardInfoWidget extends StatelessWidget {
                     height: 0,
                   ),
                 ),
-                TextSpan(
-                  text: 'Mastercard **78',
-                  style: TextStyle(
-                    color: Colors.black.withAlpha(179),
-                    fontSize: 16,
-                    fontFamily: 'Inter',
-                    fontWeight: FontWeight.w400,
-                    height: 0,
-                  ),
-                ),
+                // TextSpan(
+                //   text: 'Mastercard **78',
+                  
+                //   style: TextStyle(
+                //     overflow: TextOverflow.ellipsis,
+                //     color: Colors.black.withAlpha(179),
+                //     fontSize: 16,
+                //     fontFamily: 'Inter',
+                //     fontWeight: FontWeight.w400,
+                //     height: 0,
+                //   ),
+                // ),
               ],
             ),
           )

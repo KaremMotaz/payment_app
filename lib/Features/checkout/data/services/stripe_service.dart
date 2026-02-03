@@ -20,7 +20,7 @@ class StripeService {
     return apiService.createPaymentIntent(
       authorizationHeader: "Bearer ${ApiKeys.secretKey}",
       contentType: "application/x-www-form-urlencoded",
-      amount: paymentIntentInputModel.amount,
+      amount: "${paymentIntentInputModel.amount}00",
       currency: paymentIntentInputModel.currency,
     );
   }

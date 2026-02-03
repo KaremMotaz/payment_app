@@ -18,6 +18,7 @@ class CustomButtonBlocConsumer extends StatelessWidget {
         if (state is PaymentSuccessState) {
           context.pushAndRemoveUntil(Routes.thankYouView);
         } else if (state is PaymentFailureState) {
+          context.pop();
           errorDialog(context: context, message: state.message);
         }
       },
