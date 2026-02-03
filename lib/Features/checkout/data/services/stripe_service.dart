@@ -1,19 +1,19 @@
 import 'package:payment_app/Features/checkout/data/models/stripe/payment_intent_input_model.dart';
 import 'package:payment_app/Features/checkout/data/models/stripe/payment_intent_model/payment_intent_model.dart';
-import 'package:payment_app/Features/checkout/data/services/stripe_api_service.dart';
+import 'package:payment_app/Features/checkout/data/services/api_service.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 
 import '../../../../core/utils/api_keys.dart';
 
-class StripePaymentManager {
-  final StripeApiService stripeApiService;
+class StripeService {
+  final ApiService apiService;
 
-  StripePaymentManager({required this.stripeApiService});
+  StripeService({required this.apiService});
 
   Future<PaymentIntentModel> createPaymentIntent({
     required PaymentIntentInputModel paymentIntentInputModel,
   }) {
-    return stripeApiService.createPaymentIntent(
+    return apiService.createPaymentIntent(
       authorizationHeader: "Bearer ${ApiKeys.secretKey}",
       contentType: "application/x-www-form-urlencoded",
       amount: paymentIntentInputModel.amount,
@@ -34,5 +34,17 @@ class StripePaymentManager {
 
   Future<void> displayPaymentSheet() async {
     await Stripe.instance.presentPaymentSheet();
+  }
+
+  Future<void> makePayment({
+    required PaymentIntentInputModel paymentIntentInputModel,
+  }) async {
+    PaymentIntentModel paymentIntentModel = await createPaymentIntent(
+      paymentIntentInputModel: paymentIntentInputModel,
+    );
+    await initPaymentSheet(
+      paymentIntentClientSecret: paymentIntentModel.clientSecret,
+    );
+    await displayPaymentSheet();
   }
 }
