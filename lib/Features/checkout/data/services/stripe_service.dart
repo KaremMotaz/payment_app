@@ -10,6 +10,10 @@ class StripeService {
 
   StripeService({required this.apiService});
 
+  static Future<void> init() async {
+    Stripe.publishableKey = ApiKeys.publishableKey;
+  }
+
   Future<PaymentIntentModel> createPaymentIntent({
     required PaymentIntentInputModel paymentIntentInputModel,
   }) {

@@ -9,17 +9,9 @@ class OrderInfoItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Text(
-          title,
-          textAlign: TextAlign.center,
-          style: Styles.style18,
-        ),
+        Text(title, textAlign: TextAlign.center, style: AppStyles.style18),
         const Spacer(),
-        Text(
-          value,
-          textAlign: TextAlign.center,
-          style: Styles.style18,
-        )
+        Text(value, textAlign: TextAlign.center, style: AppStyles.style18),
       ],
     );
   }
