@@ -27,6 +27,7 @@ class _ApiService implements ApiService {
     required String contentType,
     required String amount,
     required String currency,
+    required String customerId,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -35,7 +36,11 @@ class _ApiService implements ApiService {
       r'Content-Type': contentType,
     };
     _headers.removeWhere((k, v) => v == null);
-    final _data = {'amount': amount, 'currency': currency};
+    final _data = {
+      'amount': amount,
+      'currency': currency,
+      'customer': customerId,
+    };
     final _options = _setStreamType<PaymentIntentModel>(
       Options(
             method: 'POST',
@@ -55,6 +60,89 @@ class _ApiService implements ApiService {
     late PaymentIntentModel _value;
     try {
       _value = PaymentIntentModel.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options, response: _result);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<StripeCustomerModel> createCustomer({
+    required String authorizationHeader,
+    required String contentType,
+    required String name,
+    required String email,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{
+      r'Authorization': authorizationHeader,
+      r'Content-Type': contentType,
+    };
+    _headers.removeWhere((k, v) => v == null);
+    final _data = {'name': name, 'email': email};
+    final _options = _setStreamType<StripeCustomerModel>(
+      Options(
+            method: 'POST',
+            headers: _headers,
+            extra: _extra,
+            contentType: 'application/x-www-form-urlencoded',
+          )
+          .compose(
+            _dio.options,
+            '/v1/customers',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late StripeCustomerModel _value;
+    try {
+      _value = StripeCustomerModel.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options, response: _result);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<CreateEphemeralKeyModel> createEphemeralKey({
+    required String authorizationHeader,
+    required String contentType,
+    required String stripeVersion,
+    required String customerId,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{
+      r'Authorization': authorizationHeader,
+      r'Content-Type': contentType,
+      r'Stripe-Version': stripeVersion,
+    };
+    _headers.removeWhere((k, v) => v == null);
+    final _data = {'customer': customerId};
+    final _options = _setStreamType<CreateEphemeralKeyModel>(
+      Options(
+            method: 'POST',
+            headers: _headers,
+            extra: _extra,
+            contentType: 'application/x-www-form-urlencoded',
+          )
+          .compose(
+            _dio.options,
+            '/v1/ephemeral_keys',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late CreateEphemeralKeyModel _value;
+    try {
+      _value = CreateEphemeralKeyModel.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;

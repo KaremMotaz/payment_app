@@ -6,8 +6,14 @@ part 'payment_intent_input_model.g.dart';
 class PaymentIntentInputModel {
   final String amount;
   final String currency;
+  @JsonKey(name: 'customer')
+  final String customerId;
 
-  PaymentIntentInputModel({required this.amount, required this.currency});
+  PaymentIntentInputModel({
+    required this.amount,
+    required this.currency,
+    required this.customerId,
+  });
 
   factory PaymentIntentInputModel.fromJson(Map<String, dynamic> json) =>
       _$PaymentIntentInputModelFromJson(json);
