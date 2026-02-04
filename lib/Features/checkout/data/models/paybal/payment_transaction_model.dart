@@ -8,7 +8,6 @@ part 'payment_transaction_model.g.dart';
 class PaymentTransactionModel {
   final AmountModel amount;
   final String description;
-
   @JsonKey(name: 'item_list')
   final ItemListModel itemList;
 

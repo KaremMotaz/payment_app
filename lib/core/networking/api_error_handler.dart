@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
-
 import 'api_error_model.dart';
 
 class ApiErrorHandler {
   static ApiErrorModel handle({required dynamic error}) {
     if (error is DioException) {
       switch (error.type) {
+      
         case DioExceptionType.connectionError:
           return ApiErrorModel(
             errMesssage:

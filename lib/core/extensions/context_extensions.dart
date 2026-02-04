@@ -14,10 +14,16 @@ extension NavigationExtension on BuildContext {
   }
 
   /// push and remove all previous routes
-  Future<T?> pushAndRemoveUntil<T>(String routeName, {Object? args}) {
-    return Navigator.of(
-      this,
-    ).pushNamedAndRemoveUntil<T>(routeName, (route) => false, arguments: args);
+  Future<T?> pushAndRemoveUntil<T>(
+    String routeName, {
+    Object? args,
+    bool Function(Route<dynamic>)? predicate,
+  }) {
+    return Navigator.of(this).pushNamedAndRemoveUntil<T>(
+      routeName,
+      predicate ?? (route) => false,
+      arguments: args,
+    );
   }
 
   /// pop
